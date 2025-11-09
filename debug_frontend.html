@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Frontend Debug</title>
+</head>
+<body>
+    <h1>Frontend Configuration</h1>
+    <p>Open browser console to see debug info</p>
+    <script>
+        const API_BASE = import.meta?.env?.VITE_API_BASE || "http://localhost:8000/api";
+        const BACKEND_URL = import.meta?.env?.VITE_BACKEND_URL || "http://localhost:8000";
+        
+        console.log("API_BASE:", API_BASE);
+        console.log("BACKEND_URL:", BACKEND_URL);
+        
+        // Test image URL
+        const imageUrl = "http://localhost:8000/media/products/images/test.jpg";
+        console.log("Test image URL:", imageUrl);
+        
+        // Try fetching from API
+        fetch(API_BASE + "/catalog/products/")
+            .then(r => r.json())
+            .then(data => {
+                console.log("Products API response:", data);
+                if (data.length > 0) {
+                    console.log("First product:", data[0]);
+                    if (data[0].image) {
+                        console.log("First product image URL:", data[0].image);
+                    }
+                }
+            })
+            .catch(e => console.error("API fetch error:", e));
+    </script>
+</body>
+</html>

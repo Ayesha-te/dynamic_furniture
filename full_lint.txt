@@ -1,0 +1,205 @@
+
+> vite_react_shadcn_ts@0.0.0 lint
+> eslint .
+
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\src\components\ui\badge.tsx
+  29:17  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\src\components\ui\button.tsx
+  47:18  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\src\components\ui\command.tsx
+  24:11  error  An interface declaring no members is equivalent to its supertype  @typescript-eslint/no-empty-object-type
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\src\components\ui\form.tsx
+  129:10  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\src\components\ui\navigation-menu.tsx
+  111:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\src\components\ui\sidebar.tsx
+  636:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\src\components\ui\sonner.tsx
+  27:19  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\src\components\ui\textarea.tsx
+  5:18  error  An interface declaring no members is equivalent to its supertype  @typescript-eslint/no-empty-object-type
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\src\components\ui\toggle.tsx
+  37:18  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\src\contexts\auth-context.tsx
+  46:7   error    Unnecessary catch clause                                                                                                        no-useless-catch
+  66:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\src\lib\api.ts
+   97:22   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  151:35   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  233:137  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\src\pages\admin\Categories.tsx
+   31:58  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   39:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  156:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\src\pages\admin\Dashboard.tsx
+  10:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  11:60  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\src\pages\admin\Discounts.tsx
+  67:58  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\src\pages\admin\Orders.tsx
+   76:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   88:81  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  163:71  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\src\pages\admin\Products.tsx
+   44:56  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+   58:39  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+  181:13  error  'uploadedImages' is never reassigned. Use 'const' instead  prefer-const
+  492:41  error  Unexpected any. Specify a different type                   @typescript-eslint/no-explicit-any
+
+d:\Downloads\dynamifurnish-reimagined\admin_d\tailwind.config.ts
+  90:13  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+d:\Downloads\dynamifurnish-reimagined\d_back\.venv\Lib\site-packages\django\contrib\admin\static\admin\js\vendor\jquery\jquery.js
+   792:2  warning  Unused eslint-disable directive (no problems were reported from 'no-unused-expressions')
+   901:6  warning  Unused eslint-disable directive (no problems were reported from 'eqeqeq')
+  1117:2  warning  Unused eslint-disable directive (no problems were reported from 'eqeqeq')
+  1143:3  warning  Unused eslint-disable directive (no problems were reported from 'eqeqeq')
+  1375:3  warning  Unused eslint-disable directive (no problems were reported from 'eqeqeq')
+  1390:4  warning  Unused eslint-disable directive (no problems were reported from 'eqeqeq')
+  1399:4  warning  Unused eslint-disable directive (no problems were reported from 'eqeqeq')
+  1453:2  warning  Unused eslint-disable directive (no problems were reported from 'eqeqeq')
+  1467:2  warning  Unused eslint-disable directive (no problems were reported from 'eqeqeq')
+  1965:5  warning  Unused eslint-disable directive (no problems were reported from 'no-unused-expressions')
+  2393:4  warning  Unused eslint-disable directive (no problems were reported from 'eqeqeq')
+  2465:5  warning  Unused eslint-disable directive (no problems were reported from 'eqeqeq')
+  2480:6  warning  Unused eslint-disable directive (no problems were reported from 'eqeqeq')
+  2721:2  warning  Unused eslint-enable directive (no matching eslint-disable directives were found)
+  7356:4  warning  Unused eslint-disable directive (no problems were reported from 'no-loop-func')
+  8102:4  error    Rule "no-unused-expressions" is already configured by another configuration comment in the preceding code. This configuration is ignored
+  8458:6  warning  Unused eslint-disable directive (no problems were reported from 'no-cond-assign')
+
+d:\Downloads\dynamifurnish-reimagined\d_back\.venv\Lib\site-packages\django\contrib\admin\static\admin\js\vendor\xregexp\xregexp.js
+  2851:1  error    Definition for rule 'es/no-array-prototype-foreach' was not found                                         es/no-array-prototype-foreach
+  2916:5  warning  Unused eslint-disable directive (no problems were reported from 'no-self-compare')
+  2919:7  warning  Unused eslint-disable directive (no problems were reported from 'no-self-compare')
+  3040:5  warning  Unused eslint-disable directive (no problems were reported from 'no-useless-call' or 'no-throw-literal')
+  3181:3  error    Definition for rule 'es/no-array-from' was not found                                                      es/no-array-from
+  3181:3  warning  Unused eslint-disable directive (no problems were reported from 'no-throw-literal')
+  3250:3  error    Definition for rule 'es/no-object-getprototypeof' was not found                                           es/no-object-getprototypeof
+  3425:3  error    Definition for rule 'es/no-object-defineproperty' was not found                                           es/no-object-defineproperty
+  3669:1  error    Definition for rule 'es/no-reflect' was not found                                                         es/no-reflect
+  3700:1  error    Definition for rule 'es/no-object-getownpropertydescriptor' was not found                                 es/no-object-getownpropertydescriptor
+  3790:3  error    Definition for rule 'es/no-global-this' was not found                                                     es/no-global-this
+  3793:3  warning  Unused eslint-disable directive (no problems were reported from 'no-restricted-globals')
+  3796:3  warning  Unused eslint-disable directive (no problems were reported from 'no-new-func')
+  3827:3  error    Definition for rule 'es/no-object-defineproperty' was not found                                           es/no-object-defineproperty
+  3845:3  warning  Unused eslint-disable directive (no problems were reported from 'no-prototype-builtins')
+  3955:1  error    Definition for rule 'es/no-array-isarray' was not found                                                   es/no-array-isarray
+  4113:1  error    Definition for rule 'es/no-array-prototype-keys' was not found                                            es/no-array-prototype-keys
+  4158:1  error    Definition for rule 'es/no-symbol' was not found                                                          es/no-symbol
+  4162:1  error    Definition for rule 'es/no-object-getownpropertysymbols' was not found                                    es/no-object-getownpropertysymbols
+  4298:1  error    Definition for rule 'es/no-object-defineproperties' was not found                                         es/no-object-defineproperties
+  4318:1  error    Definition for rule 'es/no-object-defineproperty' was not found                                           es/no-object-defineproperty
+  4345:1  error    Definition for rule 'es/no-object-getownpropertydescriptor' was not found                                 es/no-object-getownpropertydescriptor
+  4360:1  error    Definition for rule 'es/no-object-getownpropertynames' was not found                                      es/no-object-getownpropertynames
+  4392:1  error    Definition for rule 'es/no-object-getownpropertynames' was not found                                      es/no-object-getownpropertynames
+  4398:1  error    Definition for rule 'es/no-object-getownpropertysymbols' was not found                                    es/no-object-getownpropertysymbols
+  4457:1  error    Definition for rule 'es/no-object-keys' was not found                                                     es/no-object-keys
+  4465:1  error    Definition for rule 'es/no-object-getownpropertydescriptor' was not found                                 es/no-object-getownpropertydescriptor
+  4479:1  warning  Unused eslint-disable directive (no problems were reported from 'no-proto')
+  4487:1  error    Definition for rule 'es/no-object-setprototypeof' was not found                                           es/no-object-setprototypeof
+  4493:5  error    Definition for rule 'es/no-object-getownpropertydescriptor' was not found                                 es/no-object-getownpropertydescriptor
+  4579:1  error    Definition for rule 'es/no-object-defineproperty' was not found                                           es/no-object-defineproperty
+  4745:3  warning  Unused eslint-disable directive (no problems were reported from 'no-self-compare')
+  4857:1  error    Definition for rule 'es/no-symbol' was not found                                                          es/no-symbol
+  4943:3  warning  Unused eslint-disable directive (no problems were reported from 'no-unused-vars')
+  4972:1  error    Definition for rule 'es/no-array-prototype-foreach' was not found                                         es/no-array-prototype-foreach
+  4983:3  error    Definition for rule 'es/no-array-from' was not found                                                      es/no-array-from
+  4995:1  error    Definition for rule 'es/no-array-prototype-indexof' was not found                                         es/no-array-prototype-indexof
+  5655:5  warning  Unused eslint-disable directive (no problems were reported from 'no-unused-vars')
+  5674:3  warning  Unused eslint-disable directive (no problems were reported from 'no-unused-vars')
+
+d:\Downloads\dynamifurnish-reimagined\d_back\.venv\Lib\site-packages\django\views\templates\i18n_catalog.js
+  1:2  error  Parsing error: Unexpected token %
+
+d:\Downloads\dynamifurnish-reimagined\src\components\Header.tsx
+  33:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  34:65  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  39:52  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+d:\Downloads\dynamifurnish-reimagined\src\components\ProductCard.tsx
+  13:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+d:\Downloads\dynamifurnish-reimagined\src\components\ui\badge.tsx
+  29:17  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+d:\Downloads\dynamifurnish-reimagined\src\components\ui\button.tsx
+  47:18  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+d:\Downloads\dynamifurnish-reimagined\src\components\ui\command.tsx
+  24:11  error  An interface declaring no members is equivalent to its supertype  @typescript-eslint/no-empty-object-type
+
+d:\Downloads\dynamifurnish-reimagined\src\components\ui\form.tsx
+  129:10  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+d:\Downloads\dynamifurnish-reimagined\src\components\ui\navigation-menu.tsx
+  111:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+d:\Downloads\dynamifurnish-reimagined\src\components\ui\sidebar.tsx
+  636:3  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+d:\Downloads\dynamifurnish-reimagined\src\components\ui\sonner.tsx
+  27:19  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+d:\Downloads\dynamifurnish-reimagined\src\components\ui\textarea.tsx
+  5:18  error  An interface declaring no members is equivalent to its supertype  @typescript-eslint/no-empty-object-type
+
+d:\Downloads\dynamifurnish-reimagined\src\components\ui\toggle.tsx
+  37:18  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+d:\Downloads\dynamifurnish-reimagined\src\hooks\useAuth.tsx
+  14:44  error    Unexpected any. Specify a different type                                                                                        @typescript-eslint/no-explicit-any
+  47:20  error    Unexpected any. Specify a different type                                                                                        @typescript-eslint/no-explicit-any
+  72:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+d:\Downloads\dynamifurnish-reimagined\src\lib\api.ts
+  77:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+d:\Downloads\dynamifurnish-reimagined\src\pages\Cart.tsx
+  40:21  error    Unexpected any. Specify a different type                                                                 @typescript-eslint/no-explicit-any
+  69:6   warning  React Hook useEffect has a missing dependency: 'load'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+d:\Downloads\dynamifurnish-reimagined\src\pages\Home.tsx
+   42:50  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   54:55  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  286:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  314:49  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+d:\Downloads\dynamifurnish-reimagined\src\pages\ProductDetail.tsx
+   51:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   51:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   82:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  130:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+d:\Downloads\dynamifurnish-reimagined\src\pages\Signup.tsx
+  34:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:54  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  36:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+d:\Downloads\dynamifurnish-reimagined\src\pages\login.tsx
+  27:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  28:54  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+d:\Downloads\dynamifurnish-reimagined\tailwind.config.ts
+  98:13  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+✖ 119 problems (74 errors, 45 warnings)
+  1 error and 28 warnings potentially fixable with the `--fix` option.
+
