@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -39,10 +39,10 @@ const Cart = () => {
   const navigate = useNavigate();
   const auth = useAuth();
 
-  const load = async () => {
+  const load = useCallback(async () => {
     if (auth.user) {
       try {
-        const data = await apiFetch("/cart/") as { items?: CartItem[] };
+        const data = (await apiFetch("/cart/")) as { items?: CartItem[] };
         const updated = (data.items || []).map((i: CartItem) => ({
           ...i,
           selected: true,
@@ -51,27 +51,29 @@ const Cart = () => {
         setItems(updated);
       } catch (err) {
         console.error(err);
-      }
-    } else {
-      try {
-        const raw = localStorage.getItem("cart_items");
-        if (raw) {
-          const localItems = JSON.parse(raw).map((i: CartItem) => ({
-            ...i,
-            selected: true,
-            color: i.color || "Default",
-          }));
-          setItems(localItems);
-        }
-      } catch {
         setItems([]);
       }
+    } else {
+      // Clear any existing guest cart on initial load to avoid showing seeded/demo items.
+      // Guests can still add items during the session (ProductDetail writes to localStorage).
+      try {
+        localStorage.removeItem("cart_items");
+      } catch (e) {
+        // ignore
+      }
+      setItems([]);
     }
-  };
+  }, [auth.user]);
 
   useEffect(() => {
     load();
-  }, [auth.user, load]);
+  }, [auth.user]);
+
+  useEffect(() => {
+    const onCartUpdated = () => load();
+    window.addEventListener("cart_updated", onCartUpdated);
+    return () => window.removeEventListener("cart_updated", onCartUpdated);
+  }, [load]);
 
   const toggleSelect = (id?: number) => {
     setItems((prev) =>
@@ -80,17 +82,25 @@ const Cart = () => {
   };
 
   const updateQuantity = (id?: number, qty?: number) => {
-    if (!id || qty! < 1) return;
+    if (!id || !qty || qty < 1) return;
 
-    setItems((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, quantity: qty } : i))
-    );
+    setItems((prev) => {
+      const updated = prev.map((i) => (i.id === id ? { ...i, quantity: qty } : i));
+      if (!auth.user) {
+        localStorage.setItem("cart_items", JSON.stringify(updated));
+      }
+      return updated;
+    });
   };
 
   const updateColor = (id?: number, color?: string) => {
-    setItems((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, color } : i))
-    );
+    setItems((prev) => {
+      const updated = prev.map((i) => (i.id === id ? { ...i, color } : i));
+      if (!auth.user) {
+        localStorage.setItem("cart_items", JSON.stringify(updated));
+      }
+      return updated;
+    });
   };
 
   const getImageUrl = (item: CartItem): string => {
@@ -109,14 +119,25 @@ const Cart = () => {
 
   const remove = async (itemId?: number) => {
     if (!itemId) return;
-    try {
-      const data = await apiFetch("/cart/remove/", {
-        method: "POST",
-        body: JSON.stringify({ item_id: itemId }),
-      });
-      setItems(data.items || []);
-    } catch (err) {
-      console.error(err);
+    
+    if (auth.user) {
+      try {
+        const data = await apiFetch("/cart/remove/", {
+          method: "POST",
+          body: JSON.stringify({ item_id: itemId }),
+        });
+        setItems(data.items || []);
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      const updated = items.filter((i) => i.id !== itemId);
+      setItems(updated);
+      if (updated.length > 0) {
+        localStorage.setItem("cart_items", JSON.stringify(updated));
+      } else {
+        localStorage.removeItem("cart_items");
+      }
     }
   };
 
