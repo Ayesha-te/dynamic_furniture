@@ -230,9 +230,7 @@ const Portfolio = () => {
         <Link to="/shop" className="inline-block bg-gold hover:bg-gold-light text-brand-black font-medium px-8 py-3 rounded-full transition-all duration-300 hover:scale-105">
           Shop Office Furniture
         </Link>
-        <Link to="/shop" className="inline-block ml-4 bg-gold hover:bg-gold-light text-brand-black font-medium px-8 py-3 rounded-full transition-all duration-300 hover:scale-105">
-          Customize Your Workspace
-        </Link>
+        
       </div>
     </section>
   );
