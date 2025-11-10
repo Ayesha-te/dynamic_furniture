@@ -11,6 +11,7 @@ type CartItem = {
     id?: number;
     name?: string;
     price?: number;
+    delivery_charges?: number;
     image?: string;
     images?: Array<{
       id?: number;
@@ -22,6 +23,7 @@ type CartItem = {
   name?: string;
   quantity: number;
   price?: number;
+  delivery_charges?: number;
   selected?: boolean;
   color?: string;
 };
@@ -250,6 +252,9 @@ const Cart = () => {
 
                   <div className="text-right space-y-2">
                     <div className="font-medium text-lg">AED {it.product?.price || it.price}</div>
+                    {(it.product?.delivery_charges || it.delivery_charges) ? (
+                      <div className="text-sm text-muted-foreground">DC: AED {it.product?.delivery_charges || it.delivery_charges}</div>
+                    ) : null}
                     <Button variant="ghost" size="sm" onClick={() => remove(it.id)}>
                       Remove
                     </Button>
@@ -337,6 +342,9 @@ const Cart = () => {
                     <div>Quantity: {i.quantity}</div>
                     <div>Color: {i.color}</div>
                     <div className="font-medium">AED {i.product?.price || i.price}</div>
+                    {(i.product?.delivery_charges || i.delivery_charges) ? (
+                      <div className="text-sm text-muted-foreground">Delivery: AED {i.product?.delivery_charges || i.delivery_charges}</div>
+                    ) : null}
                   </div>
                 </div>
               );
@@ -347,6 +355,37 @@ const Cart = () => {
           <div>Address: {checkoutForm.address}</div>
           <div>City: {checkoutForm.city}</div>
           <div>Postal Code: {checkoutForm.postal}</div>
+
+          <div className="border-t pt-4">
+            <h4 className="text-lg font-semibold mb-2">Order Summary</h4>
+            <div className="space-y-2">
+              {(() => {
+                const selectedItems = items.filter(i => i.selected);
+                const subtotal = selectedItems.reduce((sum, i) => sum + ((i.product?.price || i.price || 0) * i.quantity), 0);
+                const deliveryTotal = selectedItems.reduce((sum, i) => sum + (i.product?.delivery_charges || i.delivery_charges || 0), 0);
+                const total = subtotal + deliveryTotal;
+
+                return (
+                  <>
+                    <div className="flex justify-between">
+                      <span>Subtotal:</span>
+                      <span>AED {subtotal.toFixed(2)}</span>
+                    </div>
+                    {deliveryTotal > 0 && (
+                      <div className="flex justify-between">
+                        <span>Delivery Charges:</span>
+                        <span>AED {deliveryTotal.toFixed(2)}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between font-semibold text-lg border-t pt-2">
+                      <span>Total:</span>
+                      <span>AED {total.toFixed(2)}</span>
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+          </div>
 
           <Button onClick={confirmOrder} className="bg-primary text-white w-full">
             Confirm Order
