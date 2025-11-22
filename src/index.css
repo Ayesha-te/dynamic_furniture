@@ -116,3 +116,64 @@ All colors MUST be HSL.
     @apply bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent;
   }
 }
+
+/* WhatsApp floating button styles */
+.whatsapp-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #25d366;
+  color: white;
+  padding: 16px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  cursor: pointer;
+  animation: pulse 2s infinite;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.whatsapp-btn:hover {
+  transform: scale(1.15);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.10);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Discount badge */
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: linear-gradient(180deg, #ff6b6b, #ff3b3b);
+  color: white;
+  padding: 6px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  z-index: 20;
+  box-shadow: var(--shadow-card-hover);
+  pointer-events: none;
+  transform-origin: center;
+  animation: pop 1.6s ease-in-out infinite;
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.18); }
+  60% { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}

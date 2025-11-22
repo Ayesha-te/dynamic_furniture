@@ -15,6 +15,8 @@ const Shop = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [searchParams] = useSearchParams();
 
+  const queryQ = searchParams.get("q") || "";
+
   useEffect(() => {
     const categoryParam = searchParams.get("category");
     if (categoryParam) {
@@ -28,6 +30,14 @@ const Shop = () => {
     slug: string;
     description: string;
     is_active: boolean;
+    parent_category_id?: number | null;
+    subcategories?: Array<{
+      id: number;
+      name: string;
+      slug: string;
+      description: string;
+      is_active: boolean;
+    }>;
   }
 
   interface Product {
@@ -58,10 +68,17 @@ const Shop = () => {
   }, [categoriesData]);
 
   const filteredProducts = useMemo(() => {
+    const qLower = (queryQ || "").toLowerCase().trim();
     return products.filter((product: Product) => {
       const price = parseFloat(String(product.price) || "0");
       const inPriceRange = price >= priceRange[0] && price <= priceRange[1];
       
+      // If a text query is present, match product name or category or slug
+      if (qLower) {
+        const inText = (String(product.name || "") + " " + (product.category?.name || "") + " " + (product.category?.slug || "")).toLowerCase().includes(qLower);
+        if (!inText) return false;
+      }
+
       if (selectedCategories.length === 0) {
         return inPriceRange;
       }
@@ -189,7 +206,7 @@ const Shop = () => {
                 filteredProducts.map((product: Product, index: number) => (
                   <div
                     key={product.id ?? index}
-                    className="animate-fade-in-up"
+                    className="animate-fade-in-up h-full"
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     <ProductCard id={product.id ?? index} {...product} />

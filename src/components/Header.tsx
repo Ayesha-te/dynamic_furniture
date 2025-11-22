@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link, useLocation } from "react-router-dom";
 import {
   Search,
@@ -19,12 +20,15 @@ import { Input } from "@/components/ui/input";
 import logo from "@/assets/new-21.png";
 import { useAuth } from "@/hooks/useAuth";
 import apiFetch from "@/lib/api";
+import Navbar from "@/components/Navbar";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const auth = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadCart = async () => {
@@ -35,8 +39,29 @@ const Header = () => {
         } else {
           const raw = localStorage.getItem("cart_items");
           if (!raw) return setCartCount(0);
-          const items = JSON.parse(raw);
-          setCartCount(items.reduce((s: number, i: any) => s + (i.quantity || 0), 0));
+          let items: any[] = [];
+          try {
+            items = JSON.parse(raw) || [];
+          } catch (e) {
+            // Corrupt storage — clear it
+            localStorage.removeItem("cart_items");
+            return setCartCount(0);
+          }
+
+          // Sanitize items: only count entries with numeric id/product.id and positive quantity
+          const sanitized = items.filter((i: any) => {
+            const hasId = (i && (Number(i.id) || (i.product && Number(i.product.id))));
+            const qty = Number(i.quantity) || 0;
+            return !!hasId && qty > 0;
+          });
+
+          if (!sanitized.length && items.length) {
+            // remove stale/demo items
+            try { localStorage.removeItem("cart_items"); } catch (e) {}
+            return setCartCount(0);
+          }
+
+          setCartCount(sanitized.reduce((s: number, i: any) => s + (Number(i.quantity) || 0), 0));
         }
       } catch (err) {
         // ignore errors for now
@@ -50,6 +75,17 @@ const Header = () => {
   }, [auth.user]);
 
   const location = useLocation();
+
+  // Keep search input in sync with current URL `q` parameter
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(location.search);
+      const q = params.get("q") || "";
+      setSearchTerm(q);
+    } catch (e) {
+      // ignore
+    }
+  }, [location.search]);
 
   const navLinks = [
     { name: "Home", path: "/", icon: Home },
@@ -126,8 +162,22 @@ const Header = () => {
                 type="search"
                 placeholder="Search products..."
                 className="w-48 lg:w-64"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    const q = (searchTerm || "").trim();
+                    if (q) navigate(`/shop?q=${encodeURIComponent(q)}`);
+                    else navigate(`/shop`);
+                  }
+                }}
               />
-              <Button size="icon" variant="ghost">
+              <Button size="icon" variant="ghost" onClick={() => {
+                const q = (searchTerm || "").trim();
+                if (q) navigate(`/shop?q=${encodeURIComponent(q)}`);
+                else navigate(`/shop`);
+              }}>
                 <Search size={20} />
               </Button>
             </div>
@@ -201,8 +251,22 @@ const Header = () => {
                 type="search"
                 placeholder="Search products..."
                 className="flex-1"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    const q = (searchTerm || "").trim();
+                    if (q) navigate(`/shop?q=${encodeURIComponent(q)}`);
+                    else navigate(`/shop`);
+                  }
+                }}
               />
-              <Button size="icon" variant="ghost">
+              <Button size="icon" variant="ghost" onClick={() => {
+                const q = (searchTerm || "").trim();
+                if (q) navigate(`/shop?q=${encodeURIComponent(q)}`);
+                else navigate(`/shop`);
+              }}>
                 <Search size={20} />
               </Button>
             </div>
@@ -230,6 +294,9 @@ const Header = () => {
           ))}
         </div>
       </nav>
+
+      {/* Category Navbar */}
+      <Navbar />
 
       {/* Mobile Hamburger Menu */}
       {isMenuOpen && (

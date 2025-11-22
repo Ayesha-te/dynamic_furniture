@@ -2,9 +2,52 @@ import { Link } from "react-router-dom";
 import { Facebook, Instagram, Youtube, Phone, Mail, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Logo from "@/assets/new-21.png"; // Adjust path based on your project structure
+import Logo from "@/assets/new-21.png";
+import { useState } from "react";
+import apiFetch from "@/lib/api";
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const value = email.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!value || !emailRegex.test(value)) {
+      setMessage({ type: 'error', text: 'Please enter a valid email address' });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await apiFetch("/newsletter/subscribe/", {
+        method: "POST",
+        body: JSON.stringify({ email }),
+      });
+      setMessage({ type: 'success', text: response.message || 'Successfully subscribed!' });
+      setEmail("");
+    } catch (err) {
+      console.error('Newsletter subscribe error', err);
+      // try to extract server JSON from error message if available
+      let detail = 'Failed to subscribe. Please try again.';
+      try {
+        const msg = (err && (err as Error).message) || String(err);
+        const jsonPart = msg.substring(msg.indexOf('-') + 1).trim();
+        const parsed = JSON.parse(jsonPart);
+        if (parsed && parsed.detail) detail = parsed.detail;
+        else if (parsed && parsed.error) detail = parsed.error;
+        else if (parsed && typeof parsed === 'string') detail = parsed;
+      } catch (parseErr) {
+        // fall back to generic
+      }
+      setMessage({ type: 'error', text: detail });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <footer className="bg-brand-black text-white">
       {/* Main Footer */}
@@ -163,18 +206,30 @@ const Footer = () => {
             <p className="text-gray-400 text-sm mb-6 leading-relaxed">
               Subscribe for exclusive updates on new collections and special offers.
             </p>
-            <div className="space-y-4">
+            <form onSubmit={handleSubscribe} className="space-y-4">
               <div className="relative group">
                 <Input
                   type="email"
                   placeholder="Enter your email"
-                  className="w-full bg-white/5 border border-white/10 text-white placeholder:text-gray-500 text-sm rounded-lg px-4 py-3 focus:bg-white/10 focus:border-primary transition-all duration-300"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={loading}
+                  className="w-full bg-white/5 border border-white/10 text-white placeholder:text-gray-500 text-sm rounded-lg px-4 py-3 focus:bg-white/10 focus:border-primary transition-all duration-300 disabled:opacity-50"
                 />
               </div>
-              <Button className="w-full bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg py-2.5 transition-all duration-300">
-                Subscribe
+              <Button 
+                type="submit" 
+                disabled={loading}
+                className="w-full bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg py-2.5 transition-all duration-300 disabled:opacity-50"
+              >
+                {loading ? 'Subscribing...' : 'Subscribe'}
               </Button>
-            </div>
+              {message && (
+                <p className={`text-xs font-medium ${message.type === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+                  {message.text}
+                </p>
+              )}
+            </form>
           </div>
         </div>
 

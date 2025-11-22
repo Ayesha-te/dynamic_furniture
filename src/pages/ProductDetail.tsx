@@ -68,21 +68,36 @@ const ProductDetail = () => {
 
   const handleAddToCart = async () => {
     if (auth.user) {
-      try {
-        await apiFetch("/cart/add/", {
-          method: "POST",
-          body: JSON.stringify({
-            product_id: id,
-            quantity,
-            color: selectedColor,
-          }),
-        });
+      // Optimistic UI: dispatch update immediately, then send request in background
+      const addedItem = {
+        id: Number(id),
+        product: product,
+        name: product.name,
+        quantity,
+        price: product.price,
+        discount_price: product.discount_price || null,
+        color: selectedColor,
+      };
+
+      // Update UI immediately
+      window.dispatchEvent(new CustomEvent("cart_updated", { detail: { item: addedItem } }));
+      // Navigate to cart immediately to reduce perceived latency
+      navigate("/cart");
+
+      // Fire-and-forget server request; handle errors by notifying the user and triggering a reload
+      apiFetch("/cart/add/", {
+        method: "POST",
+        body: JSON.stringify({
+          product_id: id,
+          quantity,
+          color: selectedColor,
+        }),
+      }).catch((err) => {
+        console.error("Add to cart failed (server)", err);
+        alert("Failed to persist item to cart on server");
+        // Let other components know to refresh authoritative cart from server
         window.dispatchEvent(new Event("cart_updated"));
-        navigate("/cart");
-      } catch (err) {
-        console.error("Add to cart failed", err);
-        alert("Failed to add item to cart");
-      }
+      });
     } else {
       const raw = localStorage.getItem("cart_items");
       const items = raw ? JSON.parse(raw) : [];
@@ -94,13 +109,14 @@ const ProductDetail = () => {
           id,
           name: product.name,
           price: product.price,
+          discount_price: product.discount_price,
           quantity,
           color: selectedColor,
           product: product,
         });
       }
       localStorage.setItem("cart_items", JSON.stringify(items));
-      window.dispatchEvent(new Event("cart_updated"));
+      window.dispatchEvent(new CustomEvent("cart_updated", { detail: { item: items[items.length - 1] } }));
       navigate("/cart");
     }
   };
@@ -168,9 +184,22 @@ const ProductDetail = () => {
             <div>
               <h1 className="text-4xl font-bold mb-2">{product.name}</h1>
               <div className="flex items-center gap-4 mb-4">
-                <span className="text-3xl font-bold text-primary">
-                  AED {parseFloat(product.price).toFixed(2)}
-                </span>
+                <div className="flex flex-col gap-2">
+                  {product.discount_price ? (
+                    <>
+                      <span className="text-lg text-muted-foreground line-through">
+                        AED {parseFloat(product.price).toFixed(2)}
+                      </span>
+                      <span className="text-3xl font-bold text-primary">
+                        AED {parseFloat(product.discount_price).toFixed(2)}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-3xl font-bold text-primary">
+                      AED {parseFloat(product.price).toFixed(2)}
+                    </span>
+                  )}
+                </div>
                 <Badge variant={product.stock > 0 ? "default" : "destructive"}>
                   {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
                 </Badge>

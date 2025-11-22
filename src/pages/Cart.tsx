@@ -11,6 +11,7 @@ type CartItem = {
     id?: number;
     name?: string;
     price?: number;
+    discount_price?: number | null;
     delivery_charges?: number;
     image?: string;
     images?: Array<{
@@ -23,6 +24,7 @@ type CartItem = {
   name?: string;
   quantity: number;
   price?: number;
+  discount_price?: number | null;
   delivery_charges?: number;
   selected?: boolean;
   color?: string;
@@ -56,14 +58,34 @@ const Cart = () => {
         setItems([]);
       }
     } else {
-      // Clear any existing guest cart on initial load to avoid showing seeded/demo items.
-      // Guests can still add items during the session (ProductDetail writes to localStorage).
+      // Load guest cart from localStorage immediately for instant UX
       try {
-        localStorage.removeItem("cart_items");
+        const raw = localStorage.getItem("cart_items");
+        const parsed = raw ? JSON.parse(raw) : [];
+
+        // Sanitize guest items: ensure numeric id or product.id exists and quantity > 0
+        const sanitized = (parsed || [])
+          .filter((i: any) => {
+            const idOk = (i && (Number(i.id) || (i.product && Number(i.product.id)))) && Number(i.quantity) > 0;
+            return !!idOk;
+          })
+          .map((i: CartItem) => ({
+            ...i,
+            selected: true,
+            color: i.color || "Default",
+            quantity: Number(i.quantity) || 1,
+          }));
+
+        if (!sanitized.length && raw) {
+          // If storage had items but none are valid, remove stale key
+          localStorage.removeItem("cart_items");
+        }
+
+        setItems(sanitized);
       } catch (e) {
-        // ignore
+        console.error("Failed to read guest cart from localStorage", e);
+        setItems([]);
       }
-      setItems([]);
     }
   }, [auth.user]);
 
@@ -72,9 +94,40 @@ const Cart = () => {
   }, [auth.user]);
 
   useEffect(() => {
-    const onCartUpdated = () => load();
-    window.addEventListener("cart_updated", onCartUpdated);
-    return () => window.removeEventListener("cart_updated", onCartUpdated);
+    const onCartUpdated = (e: Event) => {
+      try {
+        // If event carried a detail (optimistic add), merge it into state immediately
+        const evt = e as CustomEvent;
+        const detail = evt?.detail;
+        if (detail && detail.item) {
+          const added: CartItem = detail.item;
+          setItems((prev) => {
+            // try to merge by product id + color
+            const existingIndex = prev.findIndex(
+              (p) => p.id === added.id && (p.color || "Default") === (added.color || "Default")
+            );
+            if (existingIndex !== -1) {
+              const copy = [...prev];
+              copy[existingIndex] = { ...copy[existingIndex], quantity: (copy[existingIndex].quantity || 0) + (added.quantity || 1) };
+              if (!auth.user) localStorage.setItem("cart_items", JSON.stringify(copy));
+              return copy;
+            }
+            const next = [{ ...added, selected: true }, ...prev];
+            if (!auth.user) localStorage.setItem("cart_items", JSON.stringify(next));
+            return next;
+          });
+          return;
+        }
+      } catch (err) {
+        console.error("Error handling cart_updated event detail", err);
+      }
+
+      // default: reload from source
+      load();
+    };
+
+    window.addEventListener("cart_updated", onCartUpdated as EventListener);
+    return () => window.removeEventListener("cart_updated", onCartUpdated as EventListener);
   }, [load]);
 
   const toggleSelect = (id?: number) => {
@@ -170,7 +223,14 @@ const Cart = () => {
       });
 
       alert("✅ Order created successfully! Order ID: " + order.id);
+      // Clear client state and notify other UI pieces (Header)
       setItems([]);
+      try {
+        localStorage.removeItem("cart_items");
+      } catch (e) {
+        // ignore if localStorage unavailable
+      }
+      window.dispatchEvent(new Event("cart_updated"));
       setStep("cart");
     } catch (err) {
       console.error(err);
@@ -251,7 +311,16 @@ const Cart = () => {
                   </div>
 
                   <div className="text-right space-y-2">
-                    <div className="font-medium text-lg">AED {it.product?.price || it.price}</div>
+                    <div className="space-y-1">
+                      {(it.product?.discount_price || it.discount_price) ? (
+                        <>
+                          <div className="text-sm text-muted-foreground line-through">AED {it.product?.price || it.price}</div>
+                          <div className="font-medium text-lg">AED {it.product?.discount_price || it.discount_price}</div>
+                        </>
+                      ) : (
+                        <div className="font-medium text-lg">AED {it.product?.price || it.price}</div>
+                      )}
+                    </div>
                     {(it.product?.delivery_charges || it.delivery_charges) ? (
                       <div className="text-sm text-muted-foreground">DC: AED {it.product?.delivery_charges || it.delivery_charges}</div>
                     ) : null}
@@ -341,7 +410,16 @@ const Cart = () => {
                     <div className="font-semibold">{i.product?.name}</div>
                     <div>Quantity: {i.quantity}</div>
                     <div>Color: {i.color}</div>
-                    <div className="font-medium">AED {i.product?.price || i.price}</div>
+                    <div className="space-y-1">
+                      {(i.product?.discount_price || i.discount_price) ? (
+                        <>
+                          <div className="text-sm text-muted-foreground line-through">AED {i.product?.price || i.price}</div>
+                          <div className="font-medium">AED {i.product?.discount_price || i.discount_price}</div>
+                        </>
+                      ) : (
+                        <div className="font-medium">AED {i.product?.price || i.price}</div>
+                      )}
+                    </div>
                     {(i.product?.delivery_charges || i.delivery_charges) ? (
                       <div className="text-sm text-muted-foreground">Delivery: AED {i.product?.delivery_charges || i.delivery_charges}</div>
                     ) : null}
@@ -361,8 +439,12 @@ const Cart = () => {
             <div className="space-y-2">
               {(() => {
                 const selectedItems = items.filter(i => i.selected);
-                const subtotal = selectedItems.reduce((sum, i) => sum + ((i.product?.price || i.price || 0) * i.quantity), 0);
-                const deliveryTotal = selectedItems.reduce((sum, i) => sum + (i.product?.delivery_charges || i.delivery_charges || 0), 0);
+                const subtotal = selectedItems.reduce((sum, i) => {
+                  const discountPrice = i.product?.discount_price || i.discount_price;
+                  const price = discountPrice ? Number(discountPrice) : (Number(i.product?.price) || Number(i.price) || 0);
+                  return sum + (price * i.quantity);
+                }, 0);
+                const deliveryTotal = selectedItems.reduce((sum, i) => sum + (Number(i.product?.delivery_charges) || Number(i.delivery_charges) || 0), 0);
                 const total = subtotal + deliveryTotal;
 
                 return (

@@ -165,88 +165,6 @@ const Home = () => {
         <p className="font-semibold">🎉 10% Free Shipping On All Orders Over AED 2000</p>
       </section>
 
-      {/* Categories Slider Section */}
-      <section className="py-8 md:py-20 bg-gradient-to-b from-white to-muted/20 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none" />
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-8 md:mb-14 animate-fade-in">
-            <h2 className="text-2xl md:text-5xl font-extrabold mb-2 md:mb-4 text-brand-black">
-              Explore by <span className="text-primary">Categories</span>
-            </h2>
-            <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto">
-              Find everything you need to furnish your workspace
-            </p>
-          </div>
-
-          {/* Categories Slider - Mobile Only */}
-          <div className="lg:hidden relative">
-            <div
-              ref={categoryContainerRef}
-              className="flex gap-4 overflow-x-auto scroll-smooth pb-2 md:pb-4"
-              style={{ scrollBehavior: "smooth" }}
-            >
-              {categories.map((category, index) => (
-                <Link
-                  key={index}
-                  to={category.path}
-                  className="group relative overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-xl transition-all duration-300 border border-transparent hover:border-primary/40 flex-shrink-0 w-40"
-                >
-                  <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
-                    <div className="w-14 h-14 flex items-center justify-center bg-primary/10 text-primary rounded-full mb-4 transition-transform group-hover:scale-110">
-                      <category.icon size={28} />
-                    </div>
-                    <h3 className="text-sm font-semibold mb-1 transition-colors group-hover:text-primary line-clamp-2">
-                      {category.name}
-                    </h3>
-                  </div>
-                </Link>
-              ))}
-            </div>
-
-            {/* Slider Navigation Buttons */}
-            <button
-              onClick={() => scrollCategories("left")}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white rounded-full p-2 shadow-md hover:shadow-lg z-10 hidden md:flex"
-            >
-              <ChevronLeft size={20} />
-            </button>
-            <button
-              onClick={() => scrollCategories("right")}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white rounded-full p-2 shadow-md hover:shadow-lg z-10 hidden md:flex"
-            >
-              <ChevronRight size={20} />
-            </button>
-          </div>
-
-          {/* Categories Grid - Desktop Only */}
-          <div className="hidden lg:grid grid-cols-4 gap-8">
-            {categories.map((category, index) => (
-              <Link
-                key={index}
-                to={category.path}
-                className="group relative overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-xl transition-all duration-300 border border-transparent hover:border-primary/40"
-              >
-                <div className="flex flex-col items-center justify-center py-10 px-6 text-center">
-                  <div className="w-16 h-16 flex items-center justify-center bg-primary/10 text-primary rounded-full mb-6 transition-transform group-hover:scale-110">
-                    <category.icon size={32} />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2 transition-colors group-hover:text-primary">
-                    {category.name}
-                  </h3>
-                  <p className="text-sm text-muted-foreground opacity-80 mb-4">
-                    Discover collection
-                  </p>
-                  <span className="inline-flex items-center gap-2 text-primary text-sm font-medium opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all">
-                    Browse <ArrowRight size={16} />
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Featured Products Slider */}
       <section className="py-8 md:py-16">
         <div className="container mx-auto px-4">
@@ -334,6 +252,88 @@ const Home = () => {
       </section>
 
       <Portfolio />
+
+      {/* Categories Slider Section */}
+      <section className="py-8 md:py-20 relative overflow-hidden" style={{ backgroundColor: "#FCF5EE" }}>
+        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none" />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-8 md:mb-14 animate-fade-in">
+            <h2 className="text-2xl md:text-5xl font-extrabold mb-2 md:mb-4 text-brand-black">
+              Explore by <span className="text-primary">Categories</span>
+            </h2>
+            <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto">
+              Find everything you need to furnish your workspace
+            </p>
+          </div>
+
+          {/* Categories Slider - Mobile Only */}
+          <div className="lg:hidden relative">
+            <div
+              ref={categoryContainerRef}
+              className="flex gap-4 overflow-x-auto scroll-smooth pb-2 md:pb-4"
+              style={{ scrollBehavior: "smooth" }}
+            >
+              {categories.map((category, index) => (
+                <Link
+                  key={index}
+                  to={category.path}
+                  className="group relative overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-xl transition-all duration-300 border border-transparent hover:border-primary/40 flex-shrink-0 w-40"
+                >
+                  <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
+                    <div className="w-14 h-14 flex items-center justify-center bg-primary/10 text-primary rounded-full mb-4 transition-transform group-hover:scale-110">
+                      <category.icon size={28} />
+                    </div>
+                    <h3 className="text-sm font-semibold mb-1 transition-colors group-hover:text-primary line-clamp-2">
+                      {category.name}
+                    </h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Slider Navigation Buttons */}
+            <button
+              onClick={() => scrollCategories("left")}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white rounded-full p-2 shadow-md hover:shadow-lg z-10 hidden md:flex"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button
+              onClick={() => scrollCategories("right")}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white rounded-full p-2 shadow-md hover:shadow-lg z-10 hidden md:flex"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
+
+          {/* Categories Grid - Desktop Only */}
+          <div className="hidden lg:grid grid-cols-4 gap-8">
+            {categories.map((category, index) => (
+              <Link
+                key={index}
+                to={category.path}
+                className="group relative overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-xl transition-all duration-300 border border-transparent hover:border-primary/40"
+              >
+                <div className="flex flex-col items-center justify-center py-10 px-6 text-center">
+                  <div className="w-16 h-16 flex items-center justify-center bg-primary/10 text-primary rounded-full mb-6 transition-transform group-hover:scale-110">
+                    <category.icon size={32} />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2 transition-colors group-hover:text-primary">
+                    {category.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground opacity-80 mb-4">
+                    Discover collection
+                  </p>
+                  <span className="inline-flex items-center gap-2 text-primary text-sm font-medium opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all">
+                    Browse <ArrowRight size={16} />
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Why Choose Us */}
       <section className="py-12 md:py-16 bg-muted/30">

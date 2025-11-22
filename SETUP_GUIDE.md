@@ -42,6 +42,14 @@ python manage.py seed_data
 python manage.py createsuperuser  # Create admin user
 ```
 
+Note: After these changes a new `ProductDiscount`-related field is used by the API. If you pull changes from the repo, run:
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+to ensure the database schema is up-to-date.
+
 ### 4. Start Django Development Server
 
 ```bash
