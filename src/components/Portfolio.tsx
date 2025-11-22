@@ -227,7 +227,7 @@ const Portfolio = () => {
 
       {/* Bottom CTA */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-16 text-center">
-        <Link to="/shop" className="inline-block bg-gold hover:bg-gold-light text-brand-black font-medium px-8 py-3 rounded-full transition-all duration-300 hover:scale-105">
+        <Link to="/shop" className="inline-block bg-primary hover:bg-primary/90  text-white font-medium px-8 py-3 rounded-full transition-all duration-300 hover:scale-105">
           Shop Office Furniture
         </Link>
         

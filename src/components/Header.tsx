@@ -14,6 +14,7 @@ import {
   Briefcase,
   BookMarked,
   Mail as MailIcon,
+  Globe,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,13 +23,35 @@ import { useAuth } from "@/hooks/useAuth";
 import apiFetch from "@/lib/api";
 import Navbar from "@/components/Navbar";
 
+type Language = "en" | "ar";
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [language, setLanguage] = useState<Language>("en");
   const auth = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Load language preference
+    const savedLanguage = localStorage.getItem("language") as Language | null;
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+      document.documentElement.lang = savedLanguage;
+      document.documentElement.dir = savedLanguage === "ar" ? "rtl" : "ltr";
+    }
+  }, []);
+
+  const handleLanguageChange = (lang: Language) => {
+    setLanguage(lang);
+    localStorage.setItem("language", lang);
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    // Trigger a custom event so other components can listen
+    window.dispatchEvent(new CustomEvent("languageChanged", { detail: lang }));
+  };
 
   useEffect(() => {
     const loadCart = async () => {
@@ -43,12 +66,10 @@ const Header = () => {
           try {
             items = JSON.parse(raw) || [];
           } catch (e) {
-            // Corrupt storage — clear it
             localStorage.removeItem("cart_items");
             return setCartCount(0);
           }
 
-          // Sanitize items: only count entries with numeric id/product.id and positive quantity
           const sanitized = items.filter((i: any) => {
             const hasId = (i && (Number(i.id) || (i.product && Number(i.product.id))));
             const qty = Number(i.quantity) || 0;
@@ -56,7 +77,6 @@ const Header = () => {
           });
 
           if (!sanitized.length && items.length) {
-            // remove stale/demo items
             try { localStorage.removeItem("cart_items"); } catch (e) {}
             return setCartCount(0);
           }
@@ -64,7 +84,7 @@ const Header = () => {
           setCartCount(sanitized.reduce((s: number, i: any) => s + (Number(i.quantity) || 0), 0));
         }
       } catch (err) {
-        // ignore errors for now
+        // ignore errors
       }
     };
     loadCart();
@@ -76,7 +96,6 @@ const Header = () => {
 
   const location = useLocation();
 
-  // Keep search input in sync with current URL `q` parameter
   useEffect(() => {
     try {
       const params = new URLSearchParams(location.search);
@@ -118,16 +137,42 @@ const Header = () => {
               <span>dynamicsfurniture1@gmail.com</span>
             </a>
           </div>
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-4 items-center">
             <span className="hidden sm:inline">
               10% Free Shipping On All Order Over AED 2000
             </span>
+            
+            {/* Language Switcher - Desktop */}
+            <div className="hidden md:flex items-center gap-2 pl-4 border-l border-primary-foreground">
+              <Globe size={16} />
+              <button
+                onClick={() => handleLanguageChange("en")}
+                className={`px-2 py-1 rounded text-xs font-semibold transition-colors ${
+                  language === "en"
+                    ? "bg-white text-primary"
+                    : "hover:bg-primary-foreground/20 text-primary-foreground"
+                }`}
+              >
+                EN
+              </button>
+              <span className="text-primary-foreground/50">|</span>
+              <button
+                onClick={() => handleLanguageChange("ar")}
+                className={`px-2 py-1 rounded text-xs font-semibold transition-colors ${
+                  language === "ar"
+                    ? "bg-white text-primary"
+                    : "hover:bg-primary-foreground/20 text-primary-foreground"
+                }`}
+              >
+                AR
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Main Header */}
-      <div className="container mx-auto px-4 py-3 md:py-4">
+      <div className={`container mx-auto px-4 py-3 md:py-4 ${language === "ar" ? "rtl" : "ltr"}`}>
         <div className="flex items-center justify-between gap-2 md:gap-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 flex-shrink-0">
@@ -300,8 +345,34 @@ const Header = () => {
 
       {/* Mobile Hamburger Menu */}
       {isMenuOpen && (
-        <nav className="md:hidden border-t bg-background pb-20">
+        <nav className={`md:hidden border-t bg-background pb-20 ${language === "ar" ? "rtl" : "ltr"}`}>
           <div className="container mx-auto px-4 py-4 flex flex-col gap-3">
+            {/* Language Switcher - Mobile */}
+            <div className="flex items-center gap-2 py-3 px-4 bg-primary/10 rounded-lg mb-2">
+              <Globe size={18} />
+              <span className="text-sm font-semibold flex-1">Language</span>
+              <button
+                onClick={() => handleLanguageChange("en")}
+                className={`px-3 py-1 rounded text-xs font-semibold transition-colors ${
+                  language === "en"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-foreground hover:bg-muted/80"
+                }`}
+              >
+                EN
+              </button>
+              <button
+                onClick={() => handleLanguageChange("ar")}
+                className={`px-3 py-1 rounded text-xs font-semibold transition-colors ${
+                  language === "ar"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-foreground hover:bg-muted/80"
+                }`}
+              >
+                AR
+              </button>
+            </div>
+
             {auth.user ? (
               <>
                 <div className="py-2 px-4 bg-primary/10 rounded-lg mb-2">
